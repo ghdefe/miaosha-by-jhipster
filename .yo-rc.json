@@ -1,0 +1,43 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "com.chunmiao",
+      "nativeLanguage": "zh-cn"
+    },
+    "jhipsterVersion": "6.10.4",
+    "applicationType": "monolith",
+    "baseName": "miaosha_by_jhipster",
+    "packageName": "com.chunmiao",
+    "packageFolder": "com/chunmiao",
+    "serverPort": "8080",
+    "authenticationType": "jwt",
+    "cacheProvider": "redis",
+    "enableHibernateCache": false,
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "mysql",
+    "prodDatabaseType": "mysql",
+    "searchEngine": false,
+    "messageBroker": "kafka",
+    "serviceDiscoveryType": false,
+    "buildTool": "maven",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "MzJjYjIxNzc2NzI3ZmRmODY2MzQ4OGZlMmM1NTNhYmJmYzZlYmU1NWUxNDIxMWJiZDQzM2E5MGRmOTM1OGZhYjk4MDBhNTcyZmNmOGZjOTExYmI1YzQ3NDFlYWYyMzIwNTQ2YTBjNmI4MTBhZTAzMTQxMDk0Yzc0OTNiM2ZhNjg=",
+    "embeddableLaunchScript": false,
+    "useSass": true,
+    "clientPackageManager": "npm",
+    "clientFramework": "angularX",
+    "clientTheme": "none",
+    "clientThemeVariant": "",
+    "creationTimestamp": 1604556988756,
+    "testFrameworks": [],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [],
+    "enableTranslation": true,
+    "nativeLanguage": "zh-cn",
+    "languages": ["zh-cn", "en"],
+    "blueprints": []
+  }
+}

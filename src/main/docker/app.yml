@@ -1,0 +1,36 @@
+version: '2'
+services:
+  miaosha_by_jhipster-app:
+    image: miaosha_by_jhipster
+    environment:
+      - _JAVA_OPTIONS=-Xmx512m -Xms256m
+      - SPRING_PROFILES_ACTIVE=prod,swagger
+      - MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED=true
+      - SPRING_DATASOURCE_URL=jdbc:mysql://miaosha_by_jhipster-mysql:3306/miaosha_by_jhipster?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+      - JHIPSTER_CACHE_REDIS_SERVER=redis://miaosha_by_jhipster-redis:6379
+      - JHIPSTER_CACHE_REDIS_CLUSTER=false
+      # - JHIPSTER_CACHE_REDIS_SERVER=redis://miaosha_by_jhipster-redis:6379
+      # - JHIPSTER_CACHE_REDIS_CLUSTER=true
+      - JHIPSTER_SLEEP=30 # gives time for other services to boot before the application
+      - KAFKA_BOOTSTRAPSERVERS=kafka:9092
+    ports:
+      - 8080:8080
+  miaosha_by_jhipster-mysql:
+    extends:
+      file: mysql.yml
+      service: miaosha_by_jhipster-mysql
+  miaosha_by_jhipster-redis:
+    extends:
+      file: redis.yml
+      service: miaosha_by_jhipster-redis
+  kafka:
+    extends:
+      file: kafka.yml
+      service: kafka
+    environment:
+      - KAFKA_ADVERTISED_HOST_NAME=kafka
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+  zookeeper:
+    extends:
+      file: kafka.yml
+      service: zookeeper
