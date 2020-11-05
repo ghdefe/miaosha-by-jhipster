@@ -1,0 +1,46 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="secActivity">
+            <h2><span jhiTranslate="miaoshaByJhipsterApp.secActivity.detail.title">Sec Activity</span> {{ secActivity.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="miaoshaByJhipsterApp.secActivity.name">Name</span></dt>
+                <dd>
+                    <span>{{ secActivity.name }}</span>
+                </dd>
+                <dt><span jhiTranslate="miaoshaByJhipsterApp.secActivity.goodId">Good Id</span></dt>
+                <dd>
+                    <span>{{ secActivity.goodId }}</span>
+                </dd>
+                <dt><span jhiTranslate="miaoshaByJhipsterApp.secActivity.author">Author</span></dt>
+                <dd>
+                    <span>{{ secActivity.author }}</span>
+                </dd>
+                <dt><span jhiTranslate="miaoshaByJhipsterApp.secActivity.start">Start</span></dt>
+                <dd>
+                    <span>{{ secActivity.start }}</span>
+                </dd>
+                <dt><span jhiTranslate="miaoshaByJhipsterApp.secActivity.end">End</span></dt>
+                <dd>
+                    <span>{{ secActivity.end }}</span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/sec-activity', secActivity.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

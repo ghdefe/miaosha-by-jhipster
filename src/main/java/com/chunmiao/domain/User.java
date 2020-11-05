@@ -3,6 +3,7 @@ package com.chunmiao.domain;
 import com.chunmiao.config.Constants;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.BatchSize;
 

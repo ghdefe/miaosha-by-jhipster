@@ -1,0 +1,26 @@
+{
+  "miaoshaByJhipsterApp": {
+    "good": {
+      "home": {
+        "title": "Goods",
+        "createLabel": "创建新 Good",
+        "createOrEditLabel": "创建或编辑 Good",
+        "notFound": "No Goods found"
+      },
+      "created": "Good {{ param }} 创建成功",
+      "updated": "Good {{ param }} 更新成功",
+      "deleted": "Good {{ param }} 删除成功",
+      "delete": {
+        "question": "你确定要删除 Good {{ id }} 吗？"
+      },
+      "detail": {
+        "title": "Good"
+      },
+      "name": "Name",
+      "imgUrl": "Img Url",
+      "detail": "Detail",
+      "price": "Price",
+      "sellerId": "Seller Id"
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "miaoshaByJhipsterApp": {
+    "goodOrder": {
+      "home": {
+        "title": "Good Orders",
+        "createLabel": "创建新 Good Order",
+        "createOrEditLabel": "创建或编辑 Good Order",
+        "notFound": "No Good Orders found"
+      },
+      "created": "Good Order {{ param }} 创建成功",
+      "updated": "Good Order {{ param }} 更新成功",
+      "deleted": "Good Order {{ param }} 删除成功",
+      "delete": {
+        "question": "你确定要删除 Good Order {{ id }} 吗？"
+      },
+      "detail": {
+        "title": "Good Order"
+      },
+      "goodId": "Good Id",
+      "buyerId": "Buyer Id",
+      "price": "Price",
+      "activityId": "Activity Id",
+      "isPayed": "Is Payed",
+      "isDelivered": "Is Delivered",
+      "isRefund": "Is Refund",
+      "createTime": "Create Time"
+    }
+  }
+}

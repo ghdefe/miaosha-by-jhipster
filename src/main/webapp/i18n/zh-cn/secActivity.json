@@ -1,0 +1,26 @@
+{
+  "miaoshaByJhipsterApp": {
+    "secActivity": {
+      "home": {
+        "title": "Sec Activities",
+        "createLabel": "创建新 Sec Activity",
+        "createOrEditLabel": "创建或编辑 Sec Activity",
+        "notFound": "No Sec Activities found"
+      },
+      "created": "Sec Activity {{ param }} 创建成功",
+      "updated": "Sec Activity {{ param }} 更新成功",
+      "deleted": "Sec Activity {{ param }} 删除成功",
+      "delete": {
+        "question": "你确定要删除 Sec Activity {{ id }} 吗？"
+      },
+      "detail": {
+        "title": "Sec Activity"
+      },
+      "name": "Name",
+      "goodId": "Good Id",
+      "author": "Author",
+      "start": "Start",
+      "end": "End"
+    }
+  }
+}

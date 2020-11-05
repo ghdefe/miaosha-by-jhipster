@@ -1,0 +1,26 @@
+{
+  "miaoshaByJhipsterApp": {
+    "secActivity": {
+      "home": {
+        "title": "Sec Activities",
+        "createLabel": "Create a new Sec Activity",
+        "createOrEditLabel": "Create or edit a Sec Activity",
+        "notFound": "No Sec Activities found"
+      },
+      "created": "A new Sec Activity is created with identifier {{ param }}",
+      "updated": "A Sec Activity is updated with identifier {{ param }}",
+      "deleted": "A Sec Activity is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Sec Activity {{ id }}?"
+      },
+      "detail": {
+        "title": "Sec Activity"
+      },
+      "name": "Name",
+      "goodId": "Good Id",
+      "author": "Author",
+      "start": "Start",
+      "end": "End"
+    }
+  }
+}

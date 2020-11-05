@@ -1,0 +1,58 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="goodOrder">
+            <h2><span jhiTranslate="miaoshaByJhipsterApp.goodOrder.detail.title">Good Order</span> {{ goodOrder.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="miaoshaByJhipsterApp.goodOrder.goodId">Good Id</span></dt>
+                <dd>
+                    <span>{{ goodOrder.goodId }}</span>
+                </dd>
+                <dt><span jhiTranslate="miaoshaByJhipsterApp.goodOrder.buyerId">Buyer Id</span></dt>
+                <dd>
+                    <span>{{ goodOrder.buyerId }}</span>
+                </dd>
+                <dt><span jhiTranslate="miaoshaByJhipsterApp.goodOrder.price">Price</span></dt>
+                <dd>
+                    <span>{{ goodOrder.price }}</span>
+                </dd>
+                <dt><span jhiTranslate="miaoshaByJhipsterApp.goodOrder.activityId">Activity Id</span></dt>
+                <dd>
+                    <span>{{ goodOrder.activityId }}</span>
+                </dd>
+                <dt><span jhiTranslate="miaoshaByJhipsterApp.goodOrder.isPayed">Is Payed</span></dt>
+                <dd>
+                    <span>{{ goodOrder.isPayed }}</span>
+                </dd>
+                <dt><span jhiTranslate="miaoshaByJhipsterApp.goodOrder.isDelivered">Is Delivered</span></dt>
+                <dd>
+                    <span>{{ goodOrder.isDelivered }}</span>
+                </dd>
+                <dt><span jhiTranslate="miaoshaByJhipsterApp.goodOrder.isRefund">Is Refund</span></dt>
+                <dd>
+                    <span>{{ goodOrder.isRefund }}</span>
+                </dd>
+                <dt><span jhiTranslate="miaoshaByJhipsterApp.goodOrder.createTime">Create Time</span></dt>
+                <dd>
+                    <span>{{ goodOrder.createTime }}</span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/good-order', goodOrder.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

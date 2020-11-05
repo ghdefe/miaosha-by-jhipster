@@ -1,0 +1,53 @@
+{
+  "fluentMethods": true,
+  "clientRootFolder": "",
+  "relationships": [],
+  "fields": [
+    {
+      "fieldName": "goodId",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "buyerId",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "price",
+      "fieldType": "Float",
+      "fieldValidateRules": ["required", "min"],
+      "fieldValidateRulesMin": 0
+    },
+    {
+      "fieldName": "activityId",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "isPayed",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "isDelivered",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "isRefund",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "createTime",
+      "fieldType": "LocalDate",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "changelogDate": "20201105102644",
+  "dto": "mapstruct",
+  "searchEngine": false,
+  "service": "serviceClass",
+  "entityTableName": "good_order",
+  "databaseType": "sql",
+  "readOnly": false,
+  "jpaMetamodelFiltering": false,
+  "pagination": "no"
+}

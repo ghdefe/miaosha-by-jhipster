@@ -1,0 +1,29 @@
+{
+  "miaoshaByJhipsterApp": {
+    "goodOrder": {
+      "home": {
+        "title": "Good Orders",
+        "createLabel": "Create a new Good Order",
+        "createOrEditLabel": "Create or edit a Good Order",
+        "notFound": "No Good Orders found"
+      },
+      "created": "A new Good Order is created with identifier {{ param }}",
+      "updated": "A Good Order is updated with identifier {{ param }}",
+      "deleted": "A Good Order is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Good Order {{ id }}?"
+      },
+      "detail": {
+        "title": "Good Order"
+      },
+      "goodId": "Good Id",
+      "buyerId": "Buyer Id",
+      "price": "Price",
+      "activityId": "Activity Id",
+      "isPayed": "Is Payed",
+      "isDelivered": "Is Delivered",
+      "isRefund": "Is Refund",
+      "createTime": "Create Time"
+    }
+  }
+}

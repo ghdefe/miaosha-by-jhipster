@@ -1,0 +1,86 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+            <h2 id="jhi-sec-activity-heading" jhiTranslate="miaoshaByJhipsterApp.secActivity.home.createOrEditLabel">Create or edit a Sec Activity</h2>
+
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+
+                <div class="form-group" [hidden]="!editForm.get('id')!.value">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="miaoshaByJhipsterApp.secActivity.name" for="field_name">Name</label>
+                    <input type="text" class="form-control" name="name" id="field_name"
+                           formControlName="name"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="miaoshaByJhipsterApp.secActivity.goodId" for="field_goodId">Good Id</label>
+                    <input type="number" class="form-control" name="goodId" id="field_goodId"
+                           formControlName="goodId"/>
+                    <div *ngIf="editForm.get('goodId')!.invalid && (editForm.get('goodId')!.dirty || editForm.get('goodId')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('goodId')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.get('goodId')?.errors?.number" jhiTranslate="entity.validation.number">
+                            This field should be a number.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="miaoshaByJhipsterApp.secActivity.author" for="field_author">Author</label>
+                    <input type="number" class="form-control" name="author" id="field_author"
+                           formControlName="author"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="miaoshaByJhipsterApp.secActivity.start" for="field_start">Start</label>
+                    <div class="input-group">
+                        <input id="field_start" type="text" class="form-control" name="start" ngbDatepicker #startDp="ngbDatepicker" formControlName="start"/>
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="startDp.toggle()"><fa-icon icon="calendar-alt"></fa-icon></button>
+                        </span>
+                    </div>
+                    <div *ngIf="editForm.get('start')!.invalid && (editForm.get('start')!.dirty || editForm.get('start')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('start')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="miaoshaByJhipsterApp.secActivity.end" for="field_end">End</label>
+                    <div class="input-group">
+                        <input id="field_end" type="text" class="form-control" name="end" ngbDatepicker #endDp="ngbDatepicker" formControlName="end"/>
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="endDp.toggle()"><fa-icon icon="calendar-alt"></fa-icon></button>
+                        </span>
+                    </div>
+                    <div *ngIf="editForm.get('end')!.invalid && (editForm.get('end')!.dirty || editForm.get('end')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('end')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+                    <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

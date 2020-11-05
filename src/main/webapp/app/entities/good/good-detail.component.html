@@ -1,0 +1,46 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="good">
+            <h2><span jhiTranslate="miaoshaByJhipsterApp.good.detail.title">Good</span> {{ good.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="miaoshaByJhipsterApp.good.name">Name</span></dt>
+                <dd>
+                    <span>{{ good.name }}</span>
+                </dd>
+                <dt><span jhiTranslate="miaoshaByJhipsterApp.good.imgUrl">Img Url</span></dt>
+                <dd>
+                    <span>{{ good.imgUrl }}</span>
+                </dd>
+                <dt><span jhiTranslate="miaoshaByJhipsterApp.good.detail">Detail</span></dt>
+                <dd>
+                    <span>{{ good.detail }}</span>
+                </dd>
+                <dt><span jhiTranslate="miaoshaByJhipsterApp.good.price">Price</span></dt>
+                <dd>
+                    <span>{{ good.price }}</span>
+                </dd>
+                <dt><span jhiTranslate="miaoshaByJhipsterApp.good.sellerId">Seller Id</span></dt>
+                <dd>
+                    <span>{{ good.sellerId }}</span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/good', good.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+            </button>
+        </div>
+    </div>
+</div>
