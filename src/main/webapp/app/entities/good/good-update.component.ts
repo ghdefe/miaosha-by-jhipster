@@ -24,6 +24,7 @@ export class GoodUpdateComponent implements OnInit {
     detail: [],
     price: [null, [Validators.required, Validators.min(0)]],
     sellerId: [null, [Validators.required]],
+    stock: [null, [Validators.required, Validators.min(0)]],
   });
 
   constructor(
@@ -48,6 +49,7 @@ export class GoodUpdateComponent implements OnInit {
       detail: good.detail,
       price: good.price,
       sellerId: good.sellerId,
+      stock: good.stock,
     });
   }
 
@@ -90,6 +92,7 @@ export class GoodUpdateComponent implements OnInit {
       detail: this.editForm.get(['detail'])!.value,
       price: this.editForm.get(['price'])!.value,
       sellerId: this.editForm.get(['sellerId'])!.value,
+      stock: this.editForm.get(['stock'])!.value,
     };
   }
 

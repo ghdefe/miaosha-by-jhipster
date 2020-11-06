@@ -1,11 +1,11 @@
-id;name;img_url;detail;price;seller_id
-1;Shoes Diverse archit;Prairie;../fake-data/blob/hipster.txt;95883;91050
-2;enable Pa'anga;circuit Metrics;../fake-data/blob/hipster.txt;523;14997
-3;optical redefine;Generic Rubber Gloves Handcrafted Fresh Sausages;../fake-data/blob/hipster.txt;45581;25332
-4;Marketing Falls Driv;e-tailers;../fake-data/blob/hipster.txt;2909;79541
-5;Expanded Grocery;intuitive;../fake-data/blob/hipster.txt;92339;12368
-6;impactful;solution Borders Som;../fake-data/blob/hipster.txt;3051;70892
-7;attitude Investment ;bandwidth bypass;../fake-data/blob/hipster.txt;40965;92104
-8;Refined Steel Comput;Specialist;../fake-data/blob/hipster.txt;9008;84827
-9;hacking Highway Bran;Cambridgeshire RSS Ergonomic Wooden Cheese;../fake-data/blob/hipster.txt;10913;52717
-10;transmitter IB Inves;Wooden Kids Rustic;../fake-data/blob/hipster.txt;56168;25442
+id;name;img_url;detail;price;seller_id;stock
+1;Shoes Diverse archit;Prairie;../fake-data/blob/hipster.txt;95883;91050;57498
+2;Metal cross-platform;Chief Supervisor Hat;../fake-data/blob/hipster.txt;80748;84485;39360
+3;paradigms Home Loan ;Chief Forges;../fake-data/blob/hipster.txt;80039;94766;15134
+4;turquoise Car;algorithm bluetooth;../fake-data/blob/hipster.txt;25797;26454;1233
+5;even-keeled Frozen;Incredible Soft Bacon;../fake-data/blob/hipster.txt;31028;84828;51712
+6;Som Clothing;attitude Investment Account whiteboard;../fake-data/blob/hipster.txt;62396;72985;11438
+7;Fantastic Forward Re;eyeballs aggregate;../fake-data/blob/hipster.txt;98176;29790;9008
+8;transmitting Granite;Analyst;../fake-data/blob/hipster.txt;92742;85869;47480
+9;Rustic;Sleek Assurance optical;../fake-data/blob/hipster.txt;84166;59605;44394
+10;Wooden Kids Rustic;Business-focused functionalities;../fake-data/blob/hipster.txt;56418;25162;63161

@@ -28,6 +28,7 @@
                     <th scope="col"  jhiSortBy="detail"><span jhiTranslate="miaoshaByJhipsterApp.good.detail">Detail</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="price"><span jhiTranslate="miaoshaByJhipsterApp.good.price">Price</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="sellerId"><span jhiTranslate="miaoshaByJhipsterApp.good.sellerId">Seller Id</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="stock"><span jhiTranslate="miaoshaByJhipsterApp.good.stock">Stock</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -39,6 +40,7 @@
                     <td>{{ good.detail }}</td>
                     <td>{{ good.price }}</td>
                     <td>{{ good.sellerId }}</td>
+                    <td>{{ good.stock }}</td>
                     <td class="text-right">
                         <div class="btn-group">
                             <button type="submit"

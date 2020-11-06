@@ -27,6 +27,10 @@ public class GoodDTO implements Serializable {
     @NotNull
     private Long sellerId;
 
+    @NotNull
+    @Min(value = 0L)
+    private Long stock;
+
     
     public Long getId() {
         return id;
@@ -76,6 +80,14 @@ public class GoodDTO implements Serializable {
         this.sellerId = sellerId;
     }
 
+    public Long getStock() {
+        return stock;
+    }
+
+    public void setStock(Long stock) {
+        this.stock = stock;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -103,6 +115,7 @@ public class GoodDTO implements Serializable {
             ", detail='" + getDetail() + "'" +
             ", price=" + getPrice() +
             ", sellerId=" + getSellerId() +
+            ", stock=" + getStock() +
             "}";
     }
 }

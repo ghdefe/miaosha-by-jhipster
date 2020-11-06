@@ -40,6 +40,11 @@ public class Good implements Serializable {
     @Column(name = "seller_id", nullable = false)
     private Long sellerId;
 
+    @NotNull
+    @Min(value = 0L)
+    @Column(name = "stock", nullable = false)
+    private Long stock;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
@@ -113,6 +118,19 @@ public class Good implements Serializable {
     public void setSellerId(Long sellerId) {
         this.sellerId = sellerId;
     }
+
+    public Long getStock() {
+        return stock;
+    }
+
+    public Good stock(Long stock) {
+        this.stock = stock;
+        return this;
+    }
+
+    public void setStock(Long stock) {
+        this.stock = stock;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -141,6 +159,7 @@ public class Good implements Serializable {
             ", detail='" + getDetail() + "'" +
             ", price=" + getPrice() +
             ", sellerId=" + getSellerId() +
+            ", stock=" + getStock() +
             "}";
     }
 }

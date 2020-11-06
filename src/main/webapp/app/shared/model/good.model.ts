@@ -5,6 +5,7 @@ export interface IGood {
   detail?: any;
   price?: number;
   sellerId?: number;
+  stock?: number;
 }
 
 export class Good implements IGood {
@@ -14,6 +15,7 @@ export class Good implements IGood {
     public imgUrl?: string,
     public detail?: any,
     public price?: number,
-    public sellerId?: number
+    public sellerId?: number,
+    public stock?: number
   ) {}
 }

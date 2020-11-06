@@ -53,6 +53,9 @@ public class GoodResourceIT {
     private static final Long DEFAULT_SELLER_ID = 1L;
     private static final Long UPDATED_SELLER_ID = 2L;
 
+    private static final Long DEFAULT_STOCK = 0L;
+    private static final Long UPDATED_STOCK = 1L;
+
     @Autowired
     private GoodRepository goodRepository;
 
@@ -82,7 +85,8 @@ public class GoodResourceIT {
             .imgUrl(DEFAULT_IMG_URL)
             .detail(DEFAULT_DETAIL)
             .price(DEFAULT_PRICE)
-            .sellerId(DEFAULT_SELLER_ID);
+            .sellerId(DEFAULT_SELLER_ID)
+            .stock(DEFAULT_STOCK);
         return good;
     }
     /**
@@ -97,7 +101,8 @@ public class GoodResourceIT {
             .imgUrl(UPDATED_IMG_URL)
             .detail(UPDATED_DETAIL)
             .price(UPDATED_PRICE)
-            .sellerId(UPDATED_SELLER_ID);
+            .sellerId(UPDATED_SELLER_ID)
+            .stock(UPDATED_STOCK);
         return good;
     }
 
@@ -126,6 +131,7 @@ public class GoodResourceIT {
         assertThat(testGood.getDetail()).isEqualTo(DEFAULT_DETAIL);
         assertThat(testGood.getPrice()).isEqualTo(DEFAULT_PRICE);
         assertThat(testGood.getSellerId()).isEqualTo(DEFAULT_SELLER_ID);
+        assertThat(testGood.getStock()).isEqualTo(DEFAULT_STOCK);
     }
 
     @Test
@@ -211,6 +217,26 @@ public class GoodResourceIT {
 
     @Test
     @Transactional
+    public void checkStockIsRequired() throws Exception {
+        int databaseSizeBeforeTest = goodRepository.findAll().size();
+        // set the field null
+        good.setStock(null);
+
+        // Create the Good, which fails.
+        GoodDTO goodDTO = goodMapper.toDto(good);
+
+
+        restGoodMockMvc.perform(post("/api/goods")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(goodDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Good> goodList = goodRepository.findAll();
+        assertThat(goodList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void getAllGoods() throws Exception {
         // Initialize the database
         goodRepository.saveAndFlush(good);
@@ -224,7 +250,8 @@ public class GoodResourceIT {
             .andExpect(jsonPath("$.[*].imgUrl").value(hasItem(DEFAULT_IMG_URL)))
             .andExpect(jsonPath("$.[*].detail").value(hasItem(DEFAULT_DETAIL.toString())))
             .andExpect(jsonPath("$.[*].price").value(hasItem(DEFAULT_PRICE.doubleValue())))
-            .andExpect(jsonPath("$.[*].sellerId").value(hasItem(DEFAULT_SELLER_ID.intValue())));
+            .andExpect(jsonPath("$.[*].sellerId").value(hasItem(DEFAULT_SELLER_ID.intValue())))
+            .andExpect(jsonPath("$.[*].stock").value(hasItem(DEFAULT_STOCK.intValue())));
     }
     
     @Test
@@ -242,7 +269,8 @@ public class GoodResourceIT {
             .andExpect(jsonPath("$.imgUrl").value(DEFAULT_IMG_URL))
             .andExpect(jsonPath("$.detail").value(DEFAULT_DETAIL.toString()))
             .andExpect(jsonPath("$.price").value(DEFAULT_PRICE.doubleValue()))
-            .andExpect(jsonPath("$.sellerId").value(DEFAULT_SELLER_ID.intValue()));
+            .andExpect(jsonPath("$.sellerId").value(DEFAULT_SELLER_ID.intValue()))
+            .andExpect(jsonPath("$.stock").value(DEFAULT_STOCK.intValue()));
     }
     @Test
     @Transactional
@@ -269,7 +297,8 @@ public class GoodResourceIT {
             .imgUrl(UPDATED_IMG_URL)
             .detail(UPDATED_DETAIL)
             .price(UPDATED_PRICE)
-            .sellerId(UPDATED_SELLER_ID);
+            .sellerId(UPDATED_SELLER_ID)
+            .stock(UPDATED_STOCK);
         GoodDTO goodDTO = goodMapper.toDto(updatedGood);
 
         restGoodMockMvc.perform(put("/api/goods")
@@ -286,6 +315,7 @@ public class GoodResourceIT {
         assertThat(testGood.getDetail()).isEqualTo(UPDATED_DETAIL);
         assertThat(testGood.getPrice()).isEqualTo(UPDATED_PRICE);
         assertThat(testGood.getSellerId()).isEqualTo(UPDATED_SELLER_ID);
+        assertThat(testGood.getStock()).isEqualTo(UPDATED_STOCK);
     }
 
     @Test

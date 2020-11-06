@@ -20,7 +20,7 @@ describe('Service Tests', () => {
       service = injector.get(GoodService);
       httpMock = injector.get(HttpTestingController);
 
-      elemDefault = new Good(0, 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 0, 0);
+      elemDefault = new Good(0, 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 0, 0, 0);
     });
 
     describe('Service methods', () => {
@@ -59,6 +59,7 @@ describe('Service Tests', () => {
             detail: 'BBBBBB',
             price: 1,
             sellerId: 1,
+            stock: 1,
           },
           elemDefault
         );
@@ -80,6 +81,7 @@ describe('Service Tests', () => {
             detail: 'BBBBBB',
             price: 1,
             sellerId: 1,
+            stock: 1,
           },
           elemDefault
         );

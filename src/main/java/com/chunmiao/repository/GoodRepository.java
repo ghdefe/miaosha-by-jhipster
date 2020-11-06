@@ -11,4 +11,7 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface GoodRepository extends JpaRepository<Good, Long> {
+
+    @Query("select g.stock from Good g where g.id = ?1")
+    Long getStockById(Long id);
 }

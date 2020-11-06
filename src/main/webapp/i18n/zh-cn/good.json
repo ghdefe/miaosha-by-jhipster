@@ -20,7 +20,8 @@
       "imgUrl": "Img Url",
       "detail": "Detail",
       "price": "Price",
-      "sellerId": "Seller Id"
+      "sellerId": "Seller Id",
+      "stock": "Stock"
     }
   }
 }
