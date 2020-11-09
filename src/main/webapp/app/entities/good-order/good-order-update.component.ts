@@ -4,6 +4,8 @@ import { HttpResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+import * as moment from 'moment';
+import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 
 import { IGoodOrder, GoodOrder } from 'app/shared/model/good-order.model';
 import { GoodOrderService } from './good-order.service';
@@ -14,7 +16,6 @@ import { GoodOrderService } from './good-order.service';
 })
 export class GoodOrderUpdateComponent implements OnInit {
   isSaving = false;
-  createTimeDp: any;
 
   editForm = this.fb.group({
     id: [],
@@ -25,13 +26,18 @@ export class GoodOrderUpdateComponent implements OnInit {
     isPayed: [],
     isDelivered: [],
     isRefund: [],
-    createTime: [null, [Validators.required]],
+    createTime: [],
   });
 
   constructor(protected goodOrderService: GoodOrderService, protected activatedRoute: ActivatedRoute, private fb: FormBuilder) {}
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ goodOrder }) => {
+      if (!goodOrder.id) {
+        const today = moment().startOf('day');
+        goodOrder.createTime = today;
+      }
+
       this.updateForm(goodOrder);
     });
   }
@@ -46,7 +52,7 @@ export class GoodOrderUpdateComponent implements OnInit {
       isPayed: goodOrder.isPayed,
       isDelivered: goodOrder.isDelivered,
       isRefund: goodOrder.isRefund,
-      createTime: goodOrder.createTime,
+      createTime: goodOrder.createTime ? goodOrder.createTime.format(DATE_TIME_FORMAT) : null,
     });
   }
 
@@ -75,7 +81,7 @@ export class GoodOrderUpdateComponent implements OnInit {
       isPayed: this.editForm.get(['isPayed'])!.value,
       isDelivered: this.editForm.get(['isDelivered'])!.value,
       isRefund: this.editForm.get(['isRefund'])!.value,
-      createTime: this.editForm.get(['createTime'])!.value,
+      createTime: this.editForm.get(['createTime'])!.value ? moment(this.editForm.get(['createTime'])!.value, DATE_TIME_FORMAT) : undefined,
     };
   }
 

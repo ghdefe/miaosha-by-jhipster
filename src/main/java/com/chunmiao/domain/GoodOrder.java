@@ -5,7 +5,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 
 /**
  * A GoodOrder.
@@ -45,9 +45,8 @@ public class GoodOrder implements Serializable {
     @Column(name = "is_refund")
     private Boolean isRefund;
 
-    @NotNull
-    @Column(name = "create_time", nullable = false)
-    private LocalDate createTime;
+    @Column(name = "create_time")
+    private ZonedDateTime createTime;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -149,16 +148,16 @@ public class GoodOrder implements Serializable {
         this.isRefund = isRefund;
     }
 
-    public LocalDate getCreateTime() {
+    public ZonedDateTime getCreateTime() {
         return createTime;
     }
 
-    public GoodOrder createTime(LocalDate createTime) {
+    public GoodOrder createTime(ZonedDateTime createTime) {
         this.createTime = createTime;
         return this;
     }
 
-    public void setCreateTime(LocalDate createTime) {
+    public void setCreateTime(ZonedDateTime createTime) {
         this.createTime = createTime;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

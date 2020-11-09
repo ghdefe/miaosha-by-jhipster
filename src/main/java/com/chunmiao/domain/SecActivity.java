@@ -38,6 +38,9 @@ public class SecActivity implements Serializable {
     @Column(name = "end", nullable = false)
     private LocalDate end;
 
+    @Column(name = "sec_price")
+    private Float secPrice;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
@@ -111,6 +114,19 @@ public class SecActivity implements Serializable {
     public void setEnd(LocalDate end) {
         this.end = end;
     }
+
+    public Float getSecPrice() {
+        return secPrice;
+    }
+
+    public SecActivity secPrice(Float secPrice) {
+        this.secPrice = secPrice;
+        return this;
+    }
+
+    public void setSecPrice(Float secPrice) {
+        this.secPrice = secPrice;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -139,6 +155,7 @@ public class SecActivity implements Serializable {
             ", author=" + getAuthor() +
             ", start='" + getStart() + "'" +
             ", end='" + getEnd() + "'" +
+            ", secPrice=" + getSecPrice() +
             "}";
     }
 }

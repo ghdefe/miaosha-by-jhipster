@@ -24,6 +24,8 @@ public class SecActivityDTO implements Serializable {
     @NotNull
     private LocalDate end;
 
+    private Float secPrice;
+
     
     public Long getId() {
         return id;
@@ -73,6 +75,14 @@ public class SecActivityDTO implements Serializable {
         this.end = end;
     }
 
+    public Float getSecPrice() {
+        return secPrice;
+    }
+
+    public void setSecPrice(Float secPrice) {
+        this.secPrice = secPrice;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -100,6 +110,7 @@ public class SecActivityDTO implements Serializable {
             ", author=" + getAuthor() +
             ", start='" + getStart() + "'" +
             ", end='" + getEnd() + "'" +
+            ", secPrice=" + getSecPrice() +
             "}";
     }
 }

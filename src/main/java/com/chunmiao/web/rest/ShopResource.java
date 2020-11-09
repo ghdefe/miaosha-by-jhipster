@@ -1,11 +1,17 @@
 package com.chunmiao.web.rest;
 
 import com.chunmiao.config.KafkaProperties;
+import com.chunmiao.domain.SecActivity;
+import com.chunmiao.domain.User;
+import com.chunmiao.repository.SecActivityRepository;
+import com.chunmiao.repository.UserRepository;
+import com.chunmiao.service.GoodOrderService;
 import com.chunmiao.service.GoodService;
 import com.chunmiao.service.dto.GoodDTO;
-import org.apache.kafka.clients.Metadata;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
+import com.chunmiao.service.dto.GoodOrderDTO;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
@@ -15,15 +21,16 @@ import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.websocket.SendResult;
-import java.time.Duration;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.Map;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.concurrent.Future;
 
 /**
@@ -41,38 +48,46 @@ public class ShopResource {
     @Autowired
     private KafkaProperties kafkaProperties;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private SecActivityRepository secActivityRepository;
+
+    @Autowired
+    private GoodOrderService goodOrderService;
+
     /**
      * POST good
+     * 普通购买，利用乐观锁
      */
     @PostMapping("/good")
     public String good() {
+
         return "good";
     }
 
     /**
      * POST goodWithActivity
+     * 秒杀购买，利用redis缓存
      */
+    @Transactional
     @PostMapping("/good-with-activity")
     public String goodWithActivity(Long goodId, Long activityId) {
-        try (
-            KafkaProducer<String, String> producer = new KafkaProducer<String, String>(kafkaProperties.getProducerProps())
-        ) {
-            Future<RecordMetadata> shop = producer.send(new ProducerRecord<>("shop", "hello!"));
-        }
-
-
         String buyer = SecurityContextHolder.getContext().getAuthentication().getName();
         RedissonClient redissonClient = Redisson.create();
         RAtomicLong atomicLong = redissonClient.getAtomicLong("stock_" + goodId);
         atomicLong.compareAndSet(0, goodService.findOne(goodId).map(GoodDTO::getStock).get());
         Long stock = atomicLong.decrementAndGet();
         if (stock >= 0) {
-//            template.send("test","123");
+            // 发送消息到kafka，对数据库进行操作
+            addOrderToKafka(buyer,goodId,activityId);
             return buyer + "购买" + goodId + "成功";
         } else {
             return "没库存";
         }
     }
+
 
     /**
      * DELETE good
@@ -84,15 +99,36 @@ public class ShopResource {
 
     }
 
-// 消费者
-    @GetMapping("/test")
-    public void consumer(){
-        KafkaConsumer<String, String> consumer = new KafkaConsumer<>(kafkaProperties.getConsumerProps());
-        LinkedList<String> topics = new LinkedList<>();
-        topics.add("shop");
-        consumer.subscribe(topics);
-        ConsumerRecords<String, String> poll = consumer.poll(Duration.ZERO);
-
+    void addOrderToKafka(String buyer, Long goodId, Long activityId) {
+        try (
+            KafkaProducer<String, String> producer = new KafkaProducer<>(kafkaProperties.getProducerProps())
+        ) {
+            GoodOrderDTO goodOrderDTO = new GoodOrderDTO();
+            goodOrderDTO.setBuyerId(userRepository.findOneByLogin(buyer).map(User::getId).get());
+            goodOrderDTO.setGoodId(goodId);
+            goodOrderDTO.setActivityId(activityId);
+            goodOrderDTO.setPrice(secActivityRepository.findById(activityId).map(SecActivity::getSecPrice).get());
+            goodOrderDTO.setCreateTime(ZonedDateTime.now());
+            ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+            String json = objectMapper.writeValueAsString(goodOrderDTO);
+            Future<RecordMetadata> order = producer.send(new ProducerRecord<>("order",json));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
+
+    // 消费者
+    @Transactional
+    @KafkaListener(topics = "order",groupId = "order-consumer")
+    public void consumer(String json) throws JsonProcessingException {
+        GoodOrderDTO goodOrderDTO = new ObjectMapper().registerModule(new JavaTimeModule()).readValue(json, GoodOrderDTO.class);
+        // 创建订单
+        goodOrderService.save(goodOrderDTO);
+        // 扣减库存
+        GoodDTO goodDTO = goodService.findOne(goodOrderDTO.getGoodId()).get();
+        goodDTO.setStock(goodDTO.getStock() - 1);
+        goodService.decreaseStock(goodDTO);
+    }
+
 
 }

@@ -89,17 +89,8 @@
 
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="miaoshaByJhipsterApp.goodOrder.createTime" for="field_createTime">Create Time</label>
-                    <div class="input-group">
-                        <input id="field_createTime" type="text" class="form-control" name="createTime" ngbDatepicker #createTimeDp="ngbDatepicker" formControlName="createTime"/>
-                        <span class="input-group-append">
-                            <button type="button" class="btn btn-secondary" (click)="createTimeDp.toggle()"><fa-icon icon="calendar-alt"></fa-icon></button>
-                        </span>
-                    </div>
-                    <div *ngIf="editForm.get('createTime')!.invalid && (editForm.get('createTime')!.dirty || editForm.get('createTime')!.touched)">
-                        <small class="form-text text-danger"
-                               *ngIf="editForm.get('createTime')?.errors?.required" jhiTranslate="entity.validation.required">
-                        This field is required.
-                        </small>
+                    <div class="d-flex">
+                        <input id="field_createTime" type="datetime-local" class="form-control" name="createTime" formControlName="createTime" placeholder="YYYY-MM-DD HH:mm"/>
                     </div>
                 </div>
             </div>

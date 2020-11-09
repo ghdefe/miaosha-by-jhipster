@@ -24,7 +24,7 @@ describe('Service Tests', () => {
       httpMock = injector.get(HttpTestingController);
       currentDate = moment();
 
-      elemDefault = new SecActivity(0, 'AAAAAAA', 0, 0, currentDate, currentDate);
+      elemDefault = new SecActivity(0, 'AAAAAAA', 0, 0, currentDate, currentDate, 0);
     });
 
     describe('Service methods', () => {
@@ -77,6 +77,7 @@ describe('Service Tests', () => {
             author: 1,
             start: currentDate.format(DATE_FORMAT),
             end: currentDate.format(DATE_FORMAT),
+            secPrice: 1,
           },
           elemDefault
         );
@@ -104,6 +105,7 @@ describe('Service Tests', () => {
             author: 1,
             start: currentDate.format(DATE_FORMAT),
             end: currentDate.format(DATE_FORMAT),
+            secPrice: 1,
           },
           elemDefault
         );

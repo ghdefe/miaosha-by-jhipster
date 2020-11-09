@@ -28,6 +28,7 @@
                     <th scope="col" ><span jhiTranslate="miaoshaByJhipsterApp.secActivity.author">Author</span></th>
                     <th scope="col" ><span jhiTranslate="miaoshaByJhipsterApp.secActivity.start">Start</span></th>
                     <th scope="col" ><span jhiTranslate="miaoshaByJhipsterApp.secActivity.end">End</span></th>
+                    <th scope="col" ><span jhiTranslate="miaoshaByJhipsterApp.secActivity.secPrice">Sec Price</span></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -39,6 +40,7 @@
                     <td>{{ secActivity.author }}</td>
                     <td>{{ secActivity.start | date:'mediumDate' }}</td>
                     <td>{{ secActivity.end | date:'mediumDate' }}</td>
+                    <td>{{ secActivity.secPrice }}</td>
                     <td class="text-right">
                         <div class="btn-group">
                             <button type="submit"

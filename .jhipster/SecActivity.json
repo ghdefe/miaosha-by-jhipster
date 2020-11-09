@@ -25,6 +25,10 @@
       "fieldName": "end",
       "fieldType": "LocalDate",
       "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "secPrice",
+      "fieldType": "Float"
     }
   ],
   "changelogDate": "20201105101708",

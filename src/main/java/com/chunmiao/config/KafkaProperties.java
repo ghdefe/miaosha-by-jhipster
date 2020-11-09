@@ -1,7 +1,11 @@
 package com.chunmiao.config;
 
+import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
+import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -47,4 +51,13 @@ public class KafkaProperties {
     public void setProducer(Map<String, String> producer) {
         this.producer = producer;
     }
+
+//    @Bean
+//    public ConcurrentKafkaListenerContainerFactory<String, String> getConsumer() {
+//        ConcurrentKafkaListenerContainerFactory<String, String> kafkaFactory = new ConcurrentKafkaListenerContainerFactory<>();
+//        kafkaFactory.setConsumerFactory(new DefaultKafkaConsumerFactory<>(getConsumerProps()));
+//        return kafkaFactory;
+//    }
+
+
 }

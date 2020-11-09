@@ -21,10 +21,13 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
-import java.time.LocalDate;
+import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.time.ZoneOffset;
 import java.time.ZoneId;
 import java.util.List;
 
+import static com.chunmiao.web.rest.TestUtil.sameInstant;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -60,8 +63,8 @@ public class GoodOrderResourceIT {
     private static final Boolean DEFAULT_IS_REFUND = false;
     private static final Boolean UPDATED_IS_REFUND = true;
 
-    private static final LocalDate DEFAULT_CREATE_TIME = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_CREATE_TIME = LocalDate.now(ZoneId.systemDefault());
+    private static final ZonedDateTime DEFAULT_CREATE_TIME = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
+    private static final ZonedDateTime UPDATED_CREATE_TIME = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
     @Autowired
     private GoodOrderRepository goodOrderRepository;
@@ -230,26 +233,6 @@ public class GoodOrderResourceIT {
 
     @Test
     @Transactional
-    public void checkCreateTimeIsRequired() throws Exception {
-        int databaseSizeBeforeTest = goodOrderRepository.findAll().size();
-        // set the field null
-        goodOrder.setCreateTime(null);
-
-        // Create the GoodOrder, which fails.
-        GoodOrderDTO goodOrderDTO = goodOrderMapper.toDto(goodOrder);
-
-
-        restGoodOrderMockMvc.perform(post("/api/good-orders")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(goodOrderDTO)))
-            .andExpect(status().isBadRequest());
-
-        List<GoodOrder> goodOrderList = goodOrderRepository.findAll();
-        assertThat(goodOrderList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void getAllGoodOrders() throws Exception {
         // Initialize the database
         goodOrderRepository.saveAndFlush(goodOrder);
@@ -266,7 +249,7 @@ public class GoodOrderResourceIT {
             .andExpect(jsonPath("$.[*].isPayed").value(hasItem(DEFAULT_IS_PAYED.booleanValue())))
             .andExpect(jsonPath("$.[*].isDelivered").value(hasItem(DEFAULT_IS_DELIVERED.booleanValue())))
             .andExpect(jsonPath("$.[*].isRefund").value(hasItem(DEFAULT_IS_REFUND.booleanValue())))
-            .andExpect(jsonPath("$.[*].createTime").value(hasItem(DEFAULT_CREATE_TIME.toString())));
+            .andExpect(jsonPath("$.[*].createTime").value(hasItem(sameInstant(DEFAULT_CREATE_TIME))));
     }
     
     @Test
@@ -287,7 +270,7 @@ public class GoodOrderResourceIT {
             .andExpect(jsonPath("$.isPayed").value(DEFAULT_IS_PAYED.booleanValue()))
             .andExpect(jsonPath("$.isDelivered").value(DEFAULT_IS_DELIVERED.booleanValue()))
             .andExpect(jsonPath("$.isRefund").value(DEFAULT_IS_REFUND.booleanValue()))
-            .andExpect(jsonPath("$.createTime").value(DEFAULT_CREATE_TIME.toString()));
+            .andExpect(jsonPath("$.createTime").value(sameInstant(DEFAULT_CREATE_TIME)));
     }
     @Test
     @Transactional

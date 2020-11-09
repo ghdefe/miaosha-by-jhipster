@@ -1,6 +1,12 @@
 package com.chunmiao.service.dto;
 
-import java.time.LocalDate;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+
+import java.time.ZonedDateTime;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 
@@ -8,7 +14,7 @@ import java.io.Serializable;
  * A DTO for the {@link com.chunmiao.domain.GoodOrder} entity.
  */
 public class GoodOrderDTO implements Serializable {
-    
+
     private Long id;
 
     @NotNull
@@ -29,10 +35,10 @@ public class GoodOrderDTO implements Serializable {
 
     private Boolean isRefund;
 
-    @NotNull
-    private LocalDate createTime;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+    private ZonedDateTime createTime;
 
-    
+
     public Long getId() {
         return id;
     }
@@ -97,11 +103,11 @@ public class GoodOrderDTO implements Serializable {
         this.isRefund = isRefund;
     }
 
-    public LocalDate getCreateTime() {
+    public ZonedDateTime getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(LocalDate createTime) {
+    public void setCreateTime(ZonedDateTime createTime) {
         this.createTime = createTime;
     }
 

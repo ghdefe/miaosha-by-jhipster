@@ -54,6 +54,9 @@ public class SecActivityResourceIT {
     private static final LocalDate DEFAULT_END = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_END = LocalDate.now(ZoneId.systemDefault());
 
+    private static final Float DEFAULT_SEC_PRICE = 1F;
+    private static final Float UPDATED_SEC_PRICE = 2F;
+
     @Autowired
     private SecActivityRepository secActivityRepository;
 
@@ -83,7 +86,8 @@ public class SecActivityResourceIT {
             .goodId(DEFAULT_GOOD_ID)
             .author(DEFAULT_AUTHOR)
             .start(DEFAULT_START)
-            .end(DEFAULT_END);
+            .end(DEFAULT_END)
+            .secPrice(DEFAULT_SEC_PRICE);
         return secActivity;
     }
     /**
@@ -98,7 +102,8 @@ public class SecActivityResourceIT {
             .goodId(UPDATED_GOOD_ID)
             .author(UPDATED_AUTHOR)
             .start(UPDATED_START)
-            .end(UPDATED_END);
+            .end(UPDATED_END)
+            .secPrice(UPDATED_SEC_PRICE);
         return secActivity;
     }
 
@@ -127,6 +132,7 @@ public class SecActivityResourceIT {
         assertThat(testSecActivity.getAuthor()).isEqualTo(DEFAULT_AUTHOR);
         assertThat(testSecActivity.getStart()).isEqualTo(DEFAULT_START);
         assertThat(testSecActivity.getEnd()).isEqualTo(DEFAULT_END);
+        assertThat(testSecActivity.getSecPrice()).isEqualTo(DEFAULT_SEC_PRICE);
     }
 
     @Test
@@ -225,7 +231,8 @@ public class SecActivityResourceIT {
             .andExpect(jsonPath("$.[*].goodId").value(hasItem(DEFAULT_GOOD_ID.intValue())))
             .andExpect(jsonPath("$.[*].author").value(hasItem(DEFAULT_AUTHOR.intValue())))
             .andExpect(jsonPath("$.[*].start").value(hasItem(DEFAULT_START.toString())))
-            .andExpect(jsonPath("$.[*].end").value(hasItem(DEFAULT_END.toString())));
+            .andExpect(jsonPath("$.[*].end").value(hasItem(DEFAULT_END.toString())))
+            .andExpect(jsonPath("$.[*].secPrice").value(hasItem(DEFAULT_SEC_PRICE.doubleValue())));
     }
     
     @Test
@@ -243,7 +250,8 @@ public class SecActivityResourceIT {
             .andExpect(jsonPath("$.goodId").value(DEFAULT_GOOD_ID.intValue()))
             .andExpect(jsonPath("$.author").value(DEFAULT_AUTHOR.intValue()))
             .andExpect(jsonPath("$.start").value(DEFAULT_START.toString()))
-            .andExpect(jsonPath("$.end").value(DEFAULT_END.toString()));
+            .andExpect(jsonPath("$.end").value(DEFAULT_END.toString()))
+            .andExpect(jsonPath("$.secPrice").value(DEFAULT_SEC_PRICE.doubleValue()));
     }
     @Test
     @Transactional
@@ -270,7 +278,8 @@ public class SecActivityResourceIT {
             .goodId(UPDATED_GOOD_ID)
             .author(UPDATED_AUTHOR)
             .start(UPDATED_START)
-            .end(UPDATED_END);
+            .end(UPDATED_END)
+            .secPrice(UPDATED_SEC_PRICE);
         SecActivityDTO secActivityDTO = secActivityMapper.toDto(updatedSecActivity);
 
         restSecActivityMockMvc.perform(put("/api/sec-activities")
@@ -287,6 +296,7 @@ public class SecActivityResourceIT {
         assertThat(testSecActivity.getAuthor()).isEqualTo(UPDATED_AUTHOR);
         assertThat(testSecActivity.getStart()).isEqualTo(UPDATED_START);
         assertThat(testSecActivity.getEnd()).isEqualTo(UPDATED_END);
+        assertThat(testSecActivity.getSecPrice()).isEqualTo(UPDATED_SEC_PRICE);
     }
 
     @Test

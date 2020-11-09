@@ -24,6 +24,7 @@ export class SecActivityUpdateComponent implements OnInit {
     author: [],
     start: [null, [Validators.required]],
     end: [null, [Validators.required]],
+    secPrice: [],
   });
 
   constructor(protected secActivityService: SecActivityService, protected activatedRoute: ActivatedRoute, private fb: FormBuilder) {}
@@ -42,6 +43,7 @@ export class SecActivityUpdateComponent implements OnInit {
       author: secActivity.author,
       start: secActivity.start,
       end: secActivity.end,
+      secPrice: secActivity.secPrice,
     });
   }
 
@@ -68,6 +70,7 @@ export class SecActivityUpdateComponent implements OnInit {
       author: this.editForm.get(['author'])!.value,
       start: this.editForm.get(['start'])!.value,
       end: this.editForm.get(['end'])!.value,
+      secPrice: this.editForm.get(['secPrice'])!.value,
     };
   }
 

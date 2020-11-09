@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import * as moment from 'moment';
 
-import { DATE_FORMAT } from 'app/shared/constants/input.constants';
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared/util/request-util';
 import { IGoodOrder } from 'app/shared/model/good-order.model';
@@ -51,7 +50,7 @@ export class GoodOrderService {
 
   protected convertDateFromClient(goodOrder: IGoodOrder): IGoodOrder {
     const copy: IGoodOrder = Object.assign({}, goodOrder, {
-      createTime: goodOrder.createTime && goodOrder.createTime.isValid() ? goodOrder.createTime.format(DATE_FORMAT) : undefined,
+      createTime: goodOrder.createTime && goodOrder.createTime.isValid() ? goodOrder.createTime.toJSON() : undefined,
     });
     return copy;
   }

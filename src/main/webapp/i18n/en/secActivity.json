@@ -20,7 +20,8 @@
       "goodId": "Good Id",
       "author": "Author",
       "start": "Start",
-      "end": "End"
+      "end": "End",
+      "secPrice": "Sec Price"
     }
   }
 }

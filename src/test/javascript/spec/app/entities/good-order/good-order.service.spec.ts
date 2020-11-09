@@ -1,7 +1,7 @@
 import { TestBed, getTestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import * as moment from 'moment';
-import { DATE_FORMAT } from 'app/shared/constants/input.constants';
+import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { GoodOrderService } from 'app/entities/good-order/good-order.service';
 import { IGoodOrder, GoodOrder } from 'app/shared/model/good-order.model';
 
@@ -31,7 +31,7 @@ describe('Service Tests', () => {
       it('should find an element', () => {
         const returnedFromService = Object.assign(
           {
-            createTime: currentDate.format(DATE_FORMAT),
+            createTime: currentDate.format(DATE_TIME_FORMAT),
           },
           elemDefault
         );
@@ -47,7 +47,7 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             id: 0,
-            createTime: currentDate.format(DATE_FORMAT),
+            createTime: currentDate.format(DATE_TIME_FORMAT),
           },
           elemDefault
         );
@@ -76,7 +76,7 @@ describe('Service Tests', () => {
             isPayed: true,
             isDelivered: true,
             isRefund: true,
-            createTime: currentDate.format(DATE_FORMAT),
+            createTime: currentDate.format(DATE_TIME_FORMAT),
           },
           elemDefault
         );
@@ -105,7 +105,7 @@ describe('Service Tests', () => {
             isPayed: true,
             isDelivered: true,
             isRefund: true,
-            createTime: currentDate.format(DATE_FORMAT),
+            createTime: currentDate.format(DATE_TIME_FORMAT),
           },
           elemDefault
         );

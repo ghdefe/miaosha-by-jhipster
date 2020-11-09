@@ -4,6 +4,9 @@ import com.chunmiao.domain.Good;
 import com.chunmiao.repository.GoodRepository;
 import com.chunmiao.service.dto.GoodDTO;
 import com.chunmiao.service.mapper.GoodMapper;
+import org.redisson.Redisson;
+import org.redisson.api.RAtomicLong;
+import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +43,23 @@ public class GoodService {
      */
     public GoodDTO save(GoodDTO goodDTO) {
         log.debug("Request to save Good : {}", goodDTO);
+        Good good = goodMapper.toEntity(goodDTO);
+        good = goodRepository.save(good);
+        // 删除redis缓存
+        RedissonClient redissonClient = Redisson.create();
+        RAtomicLong atomicLong = redissonClient.getAtomicLong("stock_" + good.getId());
+        atomicLong.delete();
+        return goodMapper.toDto(good);
+    }
+
+    /**
+     * 扣减库存
+     *
+     * @param goodDTO the entity to save.
+     * @return the persisted entity.
+     */
+    public GoodDTO decreaseStock(GoodDTO goodDTO) {
+        log.debug("扣减" + goodDTO.getName() + "数据库库存");
         Good good = goodMapper.toEntity(goodDTO);
         good = goodRepository.save(good);
         return goodMapper.toDto(good);

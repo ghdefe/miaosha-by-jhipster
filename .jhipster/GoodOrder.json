@@ -37,8 +37,7 @@
     },
     {
       "fieldName": "createTime",
-      "fieldType": "LocalDate",
-      "fieldValidateRules": ["required"]
+      "fieldType": "ZonedDateTime"
     }
   ],
   "changelogDate": "20201105102644",
