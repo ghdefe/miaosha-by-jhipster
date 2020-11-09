@@ -35,7 +35,7 @@ public class GoodOrderDTO implements Serializable {
 
     private Boolean isRefund;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private ZonedDateTime createTime;
 
 

@@ -53,14 +53,17 @@ public class GoodService {
     }
 
     /**
-     * 扣减库存
+     * 使用悲观锁 扣减库存
      *
      * @param goodDTO the entity to save.
      * @return the persisted entity.
      */
+    @Transactional
     public GoodDTO decreaseStock(GoodDTO goodDTO) {
-        log.debug("扣减" + goodDTO.getName() + "数据库库存");
+        log.debug("悲观锁扣减" + goodDTO.getName() + "数据库库存");
         Good good = goodMapper.toEntity(goodDTO);
+        goodRepository.getStockByIdPessimistic(good.getId());
+        good.setStock(good.getStock() - 1);
         good = goodRepository.save(good);
         return goodMapper.toDto(good);
     }

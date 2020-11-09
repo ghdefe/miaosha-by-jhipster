@@ -29,9 +29,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 /**
  * ShopResource controller
@@ -75,10 +75,14 @@ public class ShopResource {
     @PostMapping("/good-with-activity")
     public String goodWithActivity(Long goodId, Long activityId) {
         String buyer = SecurityContextHolder.getContext().getAuthentication().getName();
+        // 从redis中拿数据
         RedissonClient redissonClient = Redisson.create();
         RAtomicLong atomicLong = redissonClient.getAtomicLong("stock_" + goodId);
-        atomicLong.compareAndSet(0, goodService.findOne(goodId).map(GoodDTO::getStock).get());
-        Long stock = atomicLong.decrementAndGet();
+        atomicLong.compareAndSet(0, goodService.findOne(goodId).map(GoodDTO::getStock).get());  // redis不存在该键值则从数据库取值
+        atomicLong.expire(5, TimeUnit.MINUTES); // 设置过期时间
+        Long stock = atomicLong.decrementAndGet();  // 减少redis中的库存
+
+        // redis中还有库存时
         if (stock >= 0) {
             // 发送消息到kafka，对数据库进行操作
             addOrderToKafka(buyer,goodId,activityId);
@@ -99,6 +103,7 @@ public class ShopResource {
 
     }
 
+    // 给kafka发送消息
     void addOrderToKafka(String buyer, Long goodId, Long activityId) {
         try (
             KafkaProducer<String, String> producer = new KafkaProducer<>(kafkaProperties.getProducerProps())
@@ -117,17 +122,17 @@ public class ShopResource {
         }
     }
 
-    // 消费者
+    // kafka消费者
     @Transactional
     @KafkaListener(topics = "order",groupId = "order-consumer")
     public void consumer(String json) throws JsonProcessingException {
         GoodOrderDTO goodOrderDTO = new ObjectMapper().registerModule(new JavaTimeModule()).readValue(json, GoodOrderDTO.class);
-        // 创建订单
-        goodOrderService.save(goodOrderDTO);
-        // 扣减库存
+        // 扣减库存 使用悲观锁
         GoodDTO goodDTO = goodService.findOne(goodOrderDTO.getGoodId()).get();
         goodDTO.setStock(goodDTO.getStock() - 1);
         goodService.decreaseStock(goodDTO);
+        // 创建订单
+        goodOrderService.save(goodOrderDTO);
     }
 
 

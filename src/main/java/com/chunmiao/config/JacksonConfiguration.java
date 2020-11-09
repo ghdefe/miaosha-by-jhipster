@@ -1,9 +1,11 @@
 package com.chunmiao.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import liquibase.pro.packaged.B;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.zalando.problem.ProblemModule;
@@ -48,6 +50,11 @@ public class JacksonConfiguration {
     @Bean
     public ConstraintViolationProblemModule constraintViolationProblemModule() {
         return new ConstraintViolationProblemModule();
+    }
+
+    @Bean
+    public ObjectMapper getObjectMapper(){
+        return new ObjectMapper().registerModule(javaTimeModule());
     }
 
 
