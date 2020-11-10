@@ -15,12 +15,16 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
+import org.apache.kafka.common.protocol.types.Field;
 import org.redisson.Redisson;
 import org.redisson.api.RAtomicLong;
+import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.BoundValueOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,12 +61,17 @@ public class ShopResource {
     @Autowired
     private GoodOrderService goodOrderService;
 
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
+
+
     /**
      * 不安全的购买机制
      */
     @Transactional
     @PostMapping("/goodTest")
     public String goodTest(Long goodId) {
+        log.debug("线程不安全的购买接口");
 //        String buyer = SecurityContextHolder.getContext().getAuthentication().getName();
         String buyer = "admin";
         GoodDTO goodDTO = goodService.findOne(goodId).get();
@@ -92,6 +101,7 @@ public class ShopResource {
     @Transactional
     @PostMapping("/good")
     public String good(Long goodId) {
+        log.debug("线程安全的购买接口，使用乐观锁实现");
 //        String buyer = SecurityContextHolder.getContext().getAuthentication().getName();
         String buyer = "admin";
         // 扣减库存
@@ -118,15 +128,16 @@ public class ShopResource {
     @Transactional
     @PostMapping("/good-with-activity")
     public String goodWithActivity(Long goodId, Long activityId) {
+        log.debug("秒杀购买接口");
 //        String buyer = SecurityContextHolder.getContext().getAuthentication().getName();
         String buyer = "admin";
         // 从redis中拿数据
-        RedissonClient redissonClient = Redisson.create();
-        RAtomicLong atomicLong = redissonClient.getAtomicLong("stock_" + goodId);
-        atomicLong.compareAndSet(0, goodService.findOne(goodId).map(GoodDTO::getStock).get());  // redis不存在该键值则从数据库取值
-        atomicLong.expire(5, TimeUnit.MINUTES); // 设置过期时间
-        Long stock = atomicLong.decrementAndGet();  // 减少redis中的库存
-
+        BoundValueOperations<String, String> boundValueOps = redisTemplate.boundValueOps("stock_" + goodId);
+        if (boundValueOps.get() == null) {
+            boundValueOps.set(goodService.findOne(goodId).map(GoodDTO::getStock).get().toString());
+        }
+        Long stock = boundValueOps.decrement();
+        boundValueOps.expire(5,TimeUnit.MINUTES);
         // redis中还有库存时
         if (stock >= 0) {
             // 发送消息到kafka，对数据库进行操作
