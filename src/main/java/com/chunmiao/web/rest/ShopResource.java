@@ -62,9 +62,16 @@ public class ShopResource {
      * 普通购买，利用乐观锁
      */
     @PostMapping("/good")
-    public String good() {
+    public String good(Long goodId) {
+        String buyer = SecurityContextHolder.getContext().getAuthentication().getName();
+        try {
+            GoodDTO goodDTO = goodService.decreaseStockOptimistic(goodId);
+        }
+        catch (RuntimeException e){
+            return "库存不足，购买失败";
+        }
 
-        return "good";
+        return buyer + "购买" + goodId + "成功";
     }
 
     /**
@@ -85,7 +92,7 @@ public class ShopResource {
         // redis中还有库存时
         if (stock >= 0) {
             // 发送消息到kafka，对数据库进行操作
-            addOrderToKafka(buyer,goodId,activityId);
+            addOrderToKafka(buyer, goodId, activityId);
             return buyer + "购买" + goodId + "成功";
         } else {
             return "没库存";
@@ -116,7 +123,7 @@ public class ShopResource {
             goodOrderDTO.setCreateTime(ZonedDateTime.now());
             ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
             String json = objectMapper.writeValueAsString(goodOrderDTO);
-            Future<RecordMetadata> order = producer.send(new ProducerRecord<>("order",json));
+            Future<RecordMetadata> order = producer.send(new ProducerRecord<>("order", json));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -124,13 +131,11 @@ public class ShopResource {
 
     // kafka消费者
     @Transactional
-    @KafkaListener(topics = "order",groupId = "order-consumer")
+    @KafkaListener(topics = "order", groupId = "order-consumer")
     public void consumer(String json) throws JsonProcessingException {
         GoodOrderDTO goodOrderDTO = new ObjectMapper().registerModule(new JavaTimeModule()).readValue(json, GoodOrderDTO.class);
         // 扣减库存 使用悲观锁
-        GoodDTO goodDTO = goodService.findOne(goodOrderDTO.getGoodId()).get();
-        goodDTO.setStock(goodDTO.getStock() - 1);
-        goodService.decreaseStock(goodDTO);
+        goodService.decreaseStockPessimistic(goodOrderDTO.getGoodId());
         // 创建订单
         goodOrderService.save(goodOrderDTO);
     }

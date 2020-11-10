@@ -55,16 +55,30 @@ public class GoodService {
     /**
      * 使用悲观锁 扣减库存
      *
-     * @param goodDTO the entity to save.
+     * @param goodId the entity to save.
      * @return the persisted entity.
      */
     @Transactional
-    public GoodDTO decreaseStock(GoodDTO goodDTO) {
-        log.debug("悲观锁扣减" + goodDTO.getName() + "数据库库存");
-        Good good = goodMapper.toEntity(goodDTO);
-        goodRepository.getStockByIdPessimistic(good.getId());
-        good.setStock(good.getStock() - 1);
-        good = goodRepository.save(good);
+    public GoodDTO decreaseStockPessimistic(Long goodId) {
+        log.debug("悲观锁扣减" + goodId + "数据库库存");
+        Good goodOnDb = goodRepository.getStockByIdPessimistic(goodId);
+        goodOnDb.setStock(goodOnDb.getStock() - 1);
+        goodRepository.save(goodOnDb);
+        return goodMapper.toDto(goodOnDb);
+    }
+
+    /**
+     * 使用乐观锁 扣减库存
+     *
+     * @param goodId the entity to save.
+     * @return the persisted entity.
+     */
+    @Transactional
+    public GoodDTO decreaseStockOptimistic(Long goodId) throws RuntimeException{
+        log.debug("乐观锁扣减" + goodId + "数据库库存");
+        Good good = goodRepository.getOne(goodId);
+        if (good.getStock() <= 0) throw new RuntimeException("库存不足");
+        goodRepository.decreseStockOptimistic(goodId, good.getStock());
         return goodMapper.toDto(good);
     }
 

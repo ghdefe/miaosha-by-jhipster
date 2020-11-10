@@ -18,11 +18,12 @@ public interface GoodRepository extends JpaRepository<Good, Long> {
     Long getStockById(Long id);
 
     // 乐观锁更新库存
+    @Modifying
     @Query("update Good g set g.stock=g.stock-1 where g.id = ?1 and g.stock = ?2")
-    int decreseStock(Long id,Long stock);
+    int decreseStockOptimistic(Long id,Long stock);
 
     // 悲观锁查询库存
-    @Query(value = "select g.stock from Good g where g.id = ?1 for update",nativeQuery = true)
-    Long getStockByIdPessimistic(Long id);
+    @Query(value = "select * from Good g where g.id = ?1 for update",nativeQuery = true)
+    Good getStockByIdPessimistic(Long id);
 
 }
