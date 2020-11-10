@@ -58,19 +58,56 @@ public class ShopResource {
     private GoodOrderService goodOrderService;
 
     /**
+     * 不安全的购买机制
+     */
+    @Transactional
+    @PostMapping("/goodTest")
+    public String goodTest(Long goodId) {
+//        String buyer = SecurityContextHolder.getContext().getAuthentication().getName();
+        String buyer = "admin";
+        GoodDTO goodDTO = goodService.findOne(goodId).get();
+        Long stock = goodDTO.getStock();
+        if (stock > 0) {
+            // 扣减库存
+            stock--;
+            goodDTO.setStock(stock);
+            goodService.save(goodDTO);
+            // 增加订单
+            GoodOrderDTO goodOrderDTO = new GoodOrderDTO();
+            goodOrderDTO.setCreateTime(ZonedDateTime.now());
+            goodOrderDTO.setPrice(goodDTO.getPrice());
+            goodOrderDTO.setActivityId(0l);
+            goodOrderDTO.setGoodId(goodDTO.getId());
+            goodOrderDTO.setBuyerId(userRepository.findOneByLogin(buyer).get().getId());
+            goodOrderService.save(goodOrderDTO);
+            return buyer + "购买" + goodId + "成功";
+        }
+        return buyer + "购买" + goodId + "失败";
+    }
+
+    /**
      * POST good
      * 普通购买，利用乐观锁
      */
+    @Transactional
     @PostMapping("/good")
     public String good(Long goodId) {
-        String buyer = SecurityContextHolder.getContext().getAuthentication().getName();
+//        String buyer = SecurityContextHolder.getContext().getAuthentication().getName();
+        String buyer = "admin";
+        // 扣减库存
         try {
             GoodDTO goodDTO = goodService.decreaseStockOptimistic(goodId);
+            // 增加订单
+            GoodOrderDTO goodOrderDTO = new GoodOrderDTO();
+            goodOrderDTO.setCreateTime(ZonedDateTime.now());
+            goodOrderDTO.setPrice(goodDTO.getPrice());
+            goodOrderDTO.setActivityId(0l);
+            goodOrderDTO.setGoodId(goodDTO.getId());
+            goodOrderDTO.setBuyerId(userRepository.findOneByLogin(buyer).get().getId());
+            goodOrderService.save(goodOrderDTO);
+        } catch (Exception e) {
+            return "购买失败";
         }
-        catch (RuntimeException e){
-            return "库存不足，购买失败";
-        }
-
         return buyer + "购买" + goodId + "成功";
     }
 
@@ -81,7 +118,8 @@ public class ShopResource {
     @Transactional
     @PostMapping("/good-with-activity")
     public String goodWithActivity(Long goodId, Long activityId) {
-        String buyer = SecurityContextHolder.getContext().getAuthentication().getName();
+//        String buyer = SecurityContextHolder.getContext().getAuthentication().getName();
+        String buyer = "admin";
         // 从redis中拿数据
         RedissonClient redissonClient = Redisson.create();
         RAtomicLong atomicLong = redissonClient.getAtomicLong("stock_" + goodId);

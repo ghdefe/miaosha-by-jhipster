@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
@@ -73,12 +74,19 @@ public class GoodService {
      * @param goodId the entity to save.
      * @return the persisted entity.
      */
-    @Transactional
-    public GoodDTO decreaseStockOptimistic(Long goodId) throws RuntimeException{
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    public GoodDTO decreaseStockOptimistic(Long goodId) throws Exception {
         log.debug("乐观锁扣减" + goodId + "数据库库存");
         Good good = goodRepository.getOne(goodId);
-        if (good.getStock() <= 0) throw new RuntimeException("库存不足");
-        goodRepository.decreseStockOptimistic(goodId, good.getStock());
+        Long stock = good.getStock();
+        int col = 0;
+        for (int i = 0; i < 5; i++) {
+            if (stock <= 0) throw new RuntimeException("库存不足");
+            col = goodRepository.decreseStockOptimistic(goodId, stock);
+            if (col > 0) break;
+            stock = goodRepository.getStockById(goodId);
+        }
+        if (col <= 0) throw new RuntimeException("扣减库存失败");
         return goodMapper.toDto(good);
     }
 
