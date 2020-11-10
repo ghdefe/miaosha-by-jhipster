@@ -1,6 +1,6 @@
 package com.chunmiao.service.dto;
 
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 
@@ -18,13 +18,11 @@ public class SecActivityDTO implements Serializable {
 
     private Long author;
 
-    @NotNull
-    private LocalDate start;
-
-    @NotNull
-    private LocalDate end;
-
     private Float secPrice;
+
+    private ZonedDateTime start;
+
+    private ZonedDateTime end;
 
     
     public Long getId() {
@@ -59,28 +57,28 @@ public class SecActivityDTO implements Serializable {
         this.author = author;
     }
 
-    public LocalDate getStart() {
-        return start;
-    }
-
-    public void setStart(LocalDate start) {
-        this.start = start;
-    }
-
-    public LocalDate getEnd() {
-        return end;
-    }
-
-    public void setEnd(LocalDate end) {
-        this.end = end;
-    }
-
     public Float getSecPrice() {
         return secPrice;
     }
 
     public void setSecPrice(Float secPrice) {
         this.secPrice = secPrice;
+    }
+
+    public ZonedDateTime getStart() {
+        return start;
+    }
+
+    public void setStart(ZonedDateTime start) {
+        this.start = start;
+    }
+
+    public ZonedDateTime getEnd() {
+        return end;
+    }
+
+    public void setEnd(ZonedDateTime end) {
+        this.end = end;
     }
 
     @Override
@@ -108,9 +106,9 @@ public class SecActivityDTO implements Serializable {
             ", name='" + getName() + "'" +
             ", goodId=" + getGoodId() +
             ", author=" + getAuthor() +
+            ", secPrice=" + getSecPrice() +
             ", start='" + getStart() + "'" +
             ", end='" + getEnd() + "'" +
-            ", secPrice=" + getSecPrice() +
             "}";
     }
 }

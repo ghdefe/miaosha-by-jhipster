@@ -4,6 +4,8 @@ import { HttpResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+import * as moment from 'moment';
+import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 
 import { ISecActivity, SecActivity } from 'app/shared/model/sec-activity.model';
 import { SecActivityService } from './sec-activity.service';
@@ -14,23 +16,27 @@ import { SecActivityService } from './sec-activity.service';
 })
 export class SecActivityUpdateComponent implements OnInit {
   isSaving = false;
-  startDp: any;
-  endDp: any;
 
   editForm = this.fb.group({
     id: [],
     name: [],
     goodId: [null, [Validators.required]],
     author: [],
-    start: [null, [Validators.required]],
-    end: [null, [Validators.required]],
     secPrice: [],
+    start: [],
+    end: [],
   });
 
   constructor(protected secActivityService: SecActivityService, protected activatedRoute: ActivatedRoute, private fb: FormBuilder) {}
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ secActivity }) => {
+      if (!secActivity.id) {
+        const today = moment().startOf('day');
+        secActivity.start = today;
+        secActivity.end = today;
+      }
+
       this.updateForm(secActivity);
     });
   }
@@ -41,9 +47,9 @@ export class SecActivityUpdateComponent implements OnInit {
       name: secActivity.name,
       goodId: secActivity.goodId,
       author: secActivity.author,
-      start: secActivity.start,
-      end: secActivity.end,
       secPrice: secActivity.secPrice,
+      start: secActivity.start ? secActivity.start.format(DATE_TIME_FORMAT) : null,
+      end: secActivity.end ? secActivity.end.format(DATE_TIME_FORMAT) : null,
     });
   }
 
@@ -68,9 +74,9 @@ export class SecActivityUpdateComponent implements OnInit {
       name: this.editForm.get(['name'])!.value,
       goodId: this.editForm.get(['goodId'])!.value,
       author: this.editForm.get(['author'])!.value,
-      start: this.editForm.get(['start'])!.value,
-      end: this.editForm.get(['end'])!.value,
       secPrice: this.editForm.get(['secPrice'])!.value,
+      start: this.editForm.get(['start'])!.value ? moment(this.editForm.get(['start'])!.value, DATE_TIME_FORMAT) : undefined,
+      end: this.editForm.get(['end'])!.value ? moment(this.editForm.get(['end'])!.value, DATE_TIME_FORMAT) : undefined,
     };
   }
 

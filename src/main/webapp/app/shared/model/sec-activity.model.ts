@@ -5,9 +5,9 @@ export interface ISecActivity {
   name?: string;
   goodId?: number;
   author?: number;
+  secPrice?: number;
   start?: Moment;
   end?: Moment;
-  secPrice?: number;
 }
 
 export class SecActivity implements ISecActivity {
@@ -16,8 +16,8 @@ export class SecActivity implements ISecActivity {
     public name?: string,
     public goodId?: number,
     public author?: number,
+    public secPrice?: number,
     public start?: Moment,
-    public end?: Moment,
-    public secPrice?: number
+    public end?: Moment
   ) {}
 }

@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import * as moment from 'moment';
 
-import { DATE_FORMAT } from 'app/shared/constants/input.constants';
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared/util/request-util';
 import { ISecActivity } from 'app/shared/model/sec-activity.model';
@@ -51,8 +50,8 @@ export class SecActivityService {
 
   protected convertDateFromClient(secActivity: ISecActivity): ISecActivity {
     const copy: ISecActivity = Object.assign({}, secActivity, {
-      start: secActivity.start && secActivity.start.isValid() ? secActivity.start.format(DATE_FORMAT) : undefined,
-      end: secActivity.end && secActivity.end.isValid() ? secActivity.end.format(DATE_FORMAT) : undefined,
+      start: secActivity.start && secActivity.start.isValid() ? secActivity.start.toJSON() : undefined,
+      end: secActivity.end && secActivity.end.isValid() ? secActivity.end.toJSON() : undefined,
     });
     return copy;
   }

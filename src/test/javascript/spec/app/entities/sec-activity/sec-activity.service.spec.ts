@@ -1,7 +1,7 @@
 import { TestBed, getTestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import * as moment from 'moment';
-import { DATE_FORMAT } from 'app/shared/constants/input.constants';
+import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { SecActivityService } from 'app/entities/sec-activity/sec-activity.service';
 import { ISecActivity, SecActivity } from 'app/shared/model/sec-activity.model';
 
@@ -24,15 +24,15 @@ describe('Service Tests', () => {
       httpMock = injector.get(HttpTestingController);
       currentDate = moment();
 
-      elemDefault = new SecActivity(0, 'AAAAAAA', 0, 0, currentDate, currentDate, 0);
+      elemDefault = new SecActivity(0, 'AAAAAAA', 0, 0, 0, currentDate, currentDate);
     });
 
     describe('Service methods', () => {
       it('should find an element', () => {
         const returnedFromService = Object.assign(
           {
-            start: currentDate.format(DATE_FORMAT),
-            end: currentDate.format(DATE_FORMAT),
+            start: currentDate.format(DATE_TIME_FORMAT),
+            end: currentDate.format(DATE_TIME_FORMAT),
           },
           elemDefault
         );
@@ -48,8 +48,8 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             id: 0,
-            start: currentDate.format(DATE_FORMAT),
-            end: currentDate.format(DATE_FORMAT),
+            start: currentDate.format(DATE_TIME_FORMAT),
+            end: currentDate.format(DATE_TIME_FORMAT),
           },
           elemDefault
         );
@@ -75,9 +75,9 @@ describe('Service Tests', () => {
             name: 'BBBBBB',
             goodId: 1,
             author: 1,
-            start: currentDate.format(DATE_FORMAT),
-            end: currentDate.format(DATE_FORMAT),
             secPrice: 1,
+            start: currentDate.format(DATE_TIME_FORMAT),
+            end: currentDate.format(DATE_TIME_FORMAT),
           },
           elemDefault
         );
@@ -103,9 +103,9 @@ describe('Service Tests', () => {
             name: 'BBBBBB',
             goodId: 1,
             author: 1,
-            start: currentDate.format(DATE_FORMAT),
-            end: currentDate.format(DATE_FORMAT),
             secPrice: 1,
+            start: currentDate.format(DATE_TIME_FORMAT),
+            end: currentDate.format(DATE_TIME_FORMAT),
           },
           elemDefault
         );

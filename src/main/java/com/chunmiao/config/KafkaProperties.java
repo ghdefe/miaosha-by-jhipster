@@ -52,12 +52,5 @@ public class KafkaProperties {
         this.producer = producer;
     }
 
-//    @Bean
-//    public ConcurrentKafkaListenerContainerFactory<String, String> getConsumer() {
-//        ConcurrentKafkaListenerContainerFactory<String, String> kafkaFactory = new ConcurrentKafkaListenerContainerFactory<>();
-//        kafkaFactory.setConsumerFactory(new DefaultKafkaConsumerFactory<>(getConsumerProps()));
-//        return kafkaFactory;
-//    }
-
 
 }

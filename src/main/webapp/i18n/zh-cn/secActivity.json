@@ -19,9 +19,9 @@
       "name": "Name",
       "goodId": "Good Id",
       "author": "Author",
+      "secPrice": "Sec Price",
       "start": "Start",
-      "end": "End",
-      "secPrice": "Sec Price"
+      "end": "End"
     }
   }
 }

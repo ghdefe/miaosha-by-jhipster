@@ -17,18 +17,16 @@
       "fieldType": "Long"
     },
     {
+      "fieldName": "secPrice",
+      "fieldType": "Float"
+    },
+    {
       "fieldName": "start",
-      "fieldType": "LocalDate",
-      "fieldValidateRules": ["required"]
+      "fieldType": "ZonedDateTime"
     },
     {
       "fieldName": "end",
-      "fieldType": "LocalDate",
-      "fieldValidateRules": ["required"]
-    },
-    {
-      "fieldName": "secPrice",
-      "fieldType": "Float"
+      "fieldType": "ZonedDateTime"
     }
   ],
   "changelogDate": "20201105101708",

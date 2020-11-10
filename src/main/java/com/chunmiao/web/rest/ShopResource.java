@@ -7,8 +7,10 @@ import com.chunmiao.repository.SecActivityRepository;
 import com.chunmiao.repository.UserRepository;
 import com.chunmiao.service.GoodOrderService;
 import com.chunmiao.service.GoodService;
+import com.chunmiao.service.dto.ActivityTime;
 import com.chunmiao.service.dto.GoodDTO;
 import com.chunmiao.service.dto.GoodOrderDTO;
+import com.chunmiao.service.mapper.ActivityTimeMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -64,6 +66,11 @@ public class ShopResource {
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
+    private ActivityTimeMapper activityTimeMapper;
 
     /**
      * 不安全的购买机制
@@ -127,8 +134,11 @@ public class ShopResource {
      */
     @Transactional
     @PostMapping("/good-with-activity")
-    public String goodWithActivity(Long goodId, Long activityId) {
+    public String goodWithActivity(Long goodId, Long activityId) throws JsonProcessingException {
         log.debug("秒杀购买接口");
+        if (!checkIsActivityTime(activityId)) {
+            return "不在活动时间";
+        }
 //        String buyer = SecurityContextHolder.getContext().getAuthentication().getName();
         String buyer = "admin";
         // 从redis中拿数据
@@ -137,7 +147,7 @@ public class ShopResource {
             boundValueOps.set(goodService.findOne(goodId).map(GoodDTO::getStock).get().toString());
         }
         Long stock = boundValueOps.decrement();
-        boundValueOps.expire(5,TimeUnit.MINUTES);
+        boundValueOps.expire(5, TimeUnit.MINUTES);
         // redis中还有库存时
         if (stock >= 0) {
             // 发送消息到kafka，对数据库进行操作
@@ -187,6 +197,23 @@ public class ShopResource {
         goodService.decreaseStockPessimistic(goodOrderDTO.getGoodId());
         // 创建订单
         goodOrderService.save(goodOrderDTO);
+    }
+
+    boolean checkIsActivityTime(Long activityId) throws JsonProcessingException {
+        log.debug("校验是否在活动时间");
+        BoundValueOperations<String, String> ops = redisTemplate.boundValueOps("activity_" + activityId);
+        if (ops.get() == null){
+            SecActivity activity = secActivityRepository.getOne(activityId);
+            ActivityTime activityTime = activityTimeMapper.toDto(activity);
+            String json = objectMapper.writeValueAsString(activityTime);
+            ops.set(json);
+        }
+        ActivityTime activityTime = objectMapper.readValue(ops.get(), ActivityTime.class);
+        if (activityTime.getStart().isBefore(ZonedDateTime.now()) && activityTime.getEnd().isAfter(ZonedDateTime.now())){
+            return true;
+        }
+        return false;
+
     }
 
 

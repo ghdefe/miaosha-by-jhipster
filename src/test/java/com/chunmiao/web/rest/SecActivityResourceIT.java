@@ -21,10 +21,13 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
-import java.time.LocalDate;
+import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.time.ZoneOffset;
 import java.time.ZoneId;
 import java.util.List;
 
+import static com.chunmiao.web.rest.TestUtil.sameInstant;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -48,14 +51,14 @@ public class SecActivityResourceIT {
     private static final Long DEFAULT_AUTHOR = 1L;
     private static final Long UPDATED_AUTHOR = 2L;
 
-    private static final LocalDate DEFAULT_START = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_START = LocalDate.now(ZoneId.systemDefault());
-
-    private static final LocalDate DEFAULT_END = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_END = LocalDate.now(ZoneId.systemDefault());
-
     private static final Float DEFAULT_SEC_PRICE = 1F;
     private static final Float UPDATED_SEC_PRICE = 2F;
+
+    private static final ZonedDateTime DEFAULT_START = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
+    private static final ZonedDateTime UPDATED_START = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
+
+    private static final ZonedDateTime DEFAULT_END = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
+    private static final ZonedDateTime UPDATED_END = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
     @Autowired
     private SecActivityRepository secActivityRepository;
@@ -85,9 +88,9 @@ public class SecActivityResourceIT {
             .name(DEFAULT_NAME)
             .goodId(DEFAULT_GOOD_ID)
             .author(DEFAULT_AUTHOR)
+            .secPrice(DEFAULT_SEC_PRICE)
             .start(DEFAULT_START)
-            .end(DEFAULT_END)
-            .secPrice(DEFAULT_SEC_PRICE);
+            .end(DEFAULT_END);
         return secActivity;
     }
     /**
@@ -101,9 +104,9 @@ public class SecActivityResourceIT {
             .name(UPDATED_NAME)
             .goodId(UPDATED_GOOD_ID)
             .author(UPDATED_AUTHOR)
+            .secPrice(UPDATED_SEC_PRICE)
             .start(UPDATED_START)
-            .end(UPDATED_END)
-            .secPrice(UPDATED_SEC_PRICE);
+            .end(UPDATED_END);
         return secActivity;
     }
 
@@ -130,9 +133,9 @@ public class SecActivityResourceIT {
         assertThat(testSecActivity.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testSecActivity.getGoodId()).isEqualTo(DEFAULT_GOOD_ID);
         assertThat(testSecActivity.getAuthor()).isEqualTo(DEFAULT_AUTHOR);
+        assertThat(testSecActivity.getSecPrice()).isEqualTo(DEFAULT_SEC_PRICE);
         assertThat(testSecActivity.getStart()).isEqualTo(DEFAULT_START);
         assertThat(testSecActivity.getEnd()).isEqualTo(DEFAULT_END);
-        assertThat(testSecActivity.getSecPrice()).isEqualTo(DEFAULT_SEC_PRICE);
     }
 
     @Test
@@ -178,46 +181,6 @@ public class SecActivityResourceIT {
 
     @Test
     @Transactional
-    public void checkStartIsRequired() throws Exception {
-        int databaseSizeBeforeTest = secActivityRepository.findAll().size();
-        // set the field null
-        secActivity.setStart(null);
-
-        // Create the SecActivity, which fails.
-        SecActivityDTO secActivityDTO = secActivityMapper.toDto(secActivity);
-
-
-        restSecActivityMockMvc.perform(post("/api/sec-activities")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(secActivityDTO)))
-            .andExpect(status().isBadRequest());
-
-        List<SecActivity> secActivityList = secActivityRepository.findAll();
-        assertThat(secActivityList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    public void checkEndIsRequired() throws Exception {
-        int databaseSizeBeforeTest = secActivityRepository.findAll().size();
-        // set the field null
-        secActivity.setEnd(null);
-
-        // Create the SecActivity, which fails.
-        SecActivityDTO secActivityDTO = secActivityMapper.toDto(secActivity);
-
-
-        restSecActivityMockMvc.perform(post("/api/sec-activities")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(secActivityDTO)))
-            .andExpect(status().isBadRequest());
-
-        List<SecActivity> secActivityList = secActivityRepository.findAll();
-        assertThat(secActivityList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void getAllSecActivities() throws Exception {
         // Initialize the database
         secActivityRepository.saveAndFlush(secActivity);
@@ -230,9 +193,9 @@ public class SecActivityResourceIT {
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].goodId").value(hasItem(DEFAULT_GOOD_ID.intValue())))
             .andExpect(jsonPath("$.[*].author").value(hasItem(DEFAULT_AUTHOR.intValue())))
-            .andExpect(jsonPath("$.[*].start").value(hasItem(DEFAULT_START.toString())))
-            .andExpect(jsonPath("$.[*].end").value(hasItem(DEFAULT_END.toString())))
-            .andExpect(jsonPath("$.[*].secPrice").value(hasItem(DEFAULT_SEC_PRICE.doubleValue())));
+            .andExpect(jsonPath("$.[*].secPrice").value(hasItem(DEFAULT_SEC_PRICE.doubleValue())))
+            .andExpect(jsonPath("$.[*].start").value(hasItem(sameInstant(DEFAULT_START))))
+            .andExpect(jsonPath("$.[*].end").value(hasItem(sameInstant(DEFAULT_END))));
     }
     
     @Test
@@ -249,9 +212,9 @@ public class SecActivityResourceIT {
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.goodId").value(DEFAULT_GOOD_ID.intValue()))
             .andExpect(jsonPath("$.author").value(DEFAULT_AUTHOR.intValue()))
-            .andExpect(jsonPath("$.start").value(DEFAULT_START.toString()))
-            .andExpect(jsonPath("$.end").value(DEFAULT_END.toString()))
-            .andExpect(jsonPath("$.secPrice").value(DEFAULT_SEC_PRICE.doubleValue()));
+            .andExpect(jsonPath("$.secPrice").value(DEFAULT_SEC_PRICE.doubleValue()))
+            .andExpect(jsonPath("$.start").value(sameInstant(DEFAULT_START)))
+            .andExpect(jsonPath("$.end").value(sameInstant(DEFAULT_END)));
     }
     @Test
     @Transactional
@@ -277,9 +240,9 @@ public class SecActivityResourceIT {
             .name(UPDATED_NAME)
             .goodId(UPDATED_GOOD_ID)
             .author(UPDATED_AUTHOR)
+            .secPrice(UPDATED_SEC_PRICE)
             .start(UPDATED_START)
-            .end(UPDATED_END)
-            .secPrice(UPDATED_SEC_PRICE);
+            .end(UPDATED_END);
         SecActivityDTO secActivityDTO = secActivityMapper.toDto(updatedSecActivity);
 
         restSecActivityMockMvc.perform(put("/api/sec-activities")
@@ -294,9 +257,9 @@ public class SecActivityResourceIT {
         assertThat(testSecActivity.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testSecActivity.getGoodId()).isEqualTo(UPDATED_GOOD_ID);
         assertThat(testSecActivity.getAuthor()).isEqualTo(UPDATED_AUTHOR);
+        assertThat(testSecActivity.getSecPrice()).isEqualTo(UPDATED_SEC_PRICE);
         assertThat(testSecActivity.getStart()).isEqualTo(UPDATED_START);
         assertThat(testSecActivity.getEnd()).isEqualTo(UPDATED_END);
-        assertThat(testSecActivity.getSecPrice()).isEqualTo(UPDATED_SEC_PRICE);
     }
 
     @Test

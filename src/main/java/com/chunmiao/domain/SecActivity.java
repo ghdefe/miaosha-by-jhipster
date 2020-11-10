@@ -5,7 +5,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 
 /**
  * A SecActivity.
@@ -30,16 +30,14 @@ public class SecActivity implements Serializable {
     @Column(name = "author")
     private Long author;
 
-    @NotNull
-    @Column(name = "start", nullable = false)
-    private LocalDate start;
-
-    @NotNull
-    @Column(name = "end", nullable = false)
-    private LocalDate end;
-
     @Column(name = "sec_price")
     private Float secPrice;
+
+    @Column(name = "start")
+    private ZonedDateTime start;
+
+    @Column(name = "end")
+    private ZonedDateTime end;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -89,32 +87,6 @@ public class SecActivity implements Serializable {
         this.author = author;
     }
 
-    public LocalDate getStart() {
-        return start;
-    }
-
-    public SecActivity start(LocalDate start) {
-        this.start = start;
-        return this;
-    }
-
-    public void setStart(LocalDate start) {
-        this.start = start;
-    }
-
-    public LocalDate getEnd() {
-        return end;
-    }
-
-    public SecActivity end(LocalDate end) {
-        this.end = end;
-        return this;
-    }
-
-    public void setEnd(LocalDate end) {
-        this.end = end;
-    }
-
     public Float getSecPrice() {
         return secPrice;
     }
@@ -126,6 +98,32 @@ public class SecActivity implements Serializable {
 
     public void setSecPrice(Float secPrice) {
         this.secPrice = secPrice;
+    }
+
+    public ZonedDateTime getStart() {
+        return start;
+    }
+
+    public SecActivity start(ZonedDateTime start) {
+        this.start = start;
+        return this;
+    }
+
+    public void setStart(ZonedDateTime start) {
+        this.start = start;
+    }
+
+    public ZonedDateTime getEnd() {
+        return end;
+    }
+
+    public SecActivity end(ZonedDateTime end) {
+        this.end = end;
+        return this;
+    }
+
+    public void setEnd(ZonedDateTime end) {
+        this.end = end;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
@@ -153,9 +151,9 @@ public class SecActivity implements Serializable {
             ", name='" + getName() + "'" +
             ", goodId=" + getGoodId() +
             ", author=" + getAuthor() +
+            ", secPrice=" + getSecPrice() +
             ", start='" + getStart() + "'" +
             ", end='" + getEnd() + "'" +
-            ", secPrice=" + getSecPrice() +
             "}";
     }
 }
