@@ -15,9 +15,11 @@
 
 logging:
   level:
-    ROOT: DEBUG
-    io.github.jhipster: DEBUG
-    com.chunmiao: DEBUG
+    ROOT: debug
+    io.github.jhipster: debug
+    com.chunmiao: debug
+    org.apache.kafka: error
+#    // 关闭kafka打印的信息
 
 spring:
   profiles:
@@ -49,7 +51,7 @@ spring:
         prepStmtCacheSqlLimit: 2048
         useServerPrepStmts: true
   jpa:
-    show-sql: true
+    show-sql: false
   liquibase:
     # Remove 'faker' if you do not want the sample data to be loaded automatically
     contexts: dev, faker

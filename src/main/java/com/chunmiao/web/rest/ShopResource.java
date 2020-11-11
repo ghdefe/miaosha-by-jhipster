@@ -48,29 +48,32 @@ public class ShopResource {
 
     private final Logger log = LoggerFactory.getLogger(ShopResource.class);
 
-    @Autowired
-    private GoodService goodService;
+    private final GoodService goodService;
 
-    @Autowired
-    private KafkaProperties kafkaProperties;
+    private final KafkaProperties kafkaProperties;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private SecActivityRepository secActivityRepository;
+    private final SecActivityRepository secActivityRepository;
 
-    @Autowired
-    private GoodOrderService goodOrderService;
+    private final GoodOrderService goodOrderService;
 
-    @Autowired
-    private RedisTemplate<String, String> redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
-    @Autowired
-    private ActivityTimeMapper activityTimeMapper;
+    private final ActivityTimeMapper activityTimeMapper;
+
+    public ShopResource(GoodService goodService, KafkaProperties kafkaProperties, UserRepository userRepository, SecActivityRepository secActivityRepository, GoodOrderService goodOrderService, RedisTemplate<String, String> redisTemplate, ObjectMapper objectMapper, ActivityTimeMapper activityTimeMapper) {
+        this.goodService = goodService;
+        this.kafkaProperties = kafkaProperties;
+        this.userRepository = userRepository;
+        this.secActivityRepository = secActivityRepository;
+        this.goodOrderService = goodOrderService;
+        this.redisTemplate = redisTemplate;
+        this.objectMapper = objectMapper;
+        this.activityTimeMapper = activityTimeMapper;
+    }
 
     /**
      * 不安全的购买机制
@@ -180,7 +183,7 @@ public class ShopResource {
             goodOrderDTO.setActivityId(activityId);
             goodOrderDTO.setPrice(secActivityRepository.findById(activityId).map(SecActivity::getSecPrice).get());
             goodOrderDTO.setCreateTime(ZonedDateTime.now());
-            ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+//            ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
             String json = objectMapper.writeValueAsString(goodOrderDTO);
             Future<RecordMetadata> order = producer.send(new ProducerRecord<>("order", json));
         } catch (JsonProcessingException e) {
@@ -192,7 +195,7 @@ public class ShopResource {
     @Transactional
     @KafkaListener(topics = "order", groupId = "order-consumer")
     public void consumer(String json) throws JsonProcessingException {
-        GoodOrderDTO goodOrderDTO = new ObjectMapper().registerModule(new JavaTimeModule()).readValue(json, GoodOrderDTO.class);
+        GoodOrderDTO goodOrderDTO = objectMapper.readValue(json, GoodOrderDTO.class);
         // 扣减库存 使用悲观锁
         goodService.decreaseStockPessimistic(goodOrderDTO.getGoodId());
         // 创建订单

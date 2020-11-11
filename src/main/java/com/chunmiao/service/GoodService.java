@@ -4,6 +4,7 @@ import com.chunmiao.domain.Good;
 import com.chunmiao.repository.GoodRepository;
 import com.chunmiao.service.dto.GoodDTO;
 import com.chunmiao.service.mapper.GoodMapper;
+import com.chunmiao.web.rest.errors.StockShortageException;
 import org.redisson.Redisson;
 import org.redisson.api.RAtomicLong;
 import org.redisson.api.RedissonClient;
@@ -81,7 +82,7 @@ public class GoodService {
         Long stock = good.getStock();
         int col = 0;
         for (int i = 0; i < 5; i++) {
-            if (stock <= 0) throw new RuntimeException("库存不足");
+            if (stock <= 0) throw new StockShortageException();
             col = goodRepository.decreseStockOptimistic(goodId, stock);
             if (col > 0) break;
             stock = goodRepository.getStockById(goodId);
